@@ -1,8 +1,3 @@
-let board = [];
-for (let i = 0; i < 8; i++) {
-  board[i] = [];
-  for (let j = 0; j < 8; j++) board[i][j] = "";
-}
 
 function allowedMoves(pos) {
   const firstMove = [pos[0] + 2, pos[1] + 1];
@@ -26,7 +21,8 @@ function allowedMoves(pos) {
   ];
   const allowedMoves = [];
   for (let i = 0; i < moves.length; i++) {
-    if (moves[i][0] >= 0 && moves[i][1] >= 0 && moves[i][0] < 8 && moves[i][1] <8) {
+    if (moves[i][0] >= 0 && moves[i][1] >= 0 && moves[i][0] < 8 && moves[i][1] <8) { 
+      // make sure only positive and less than 8 moves exist {0,1,2,...,7}
       allowedMoves.push(moves[i]);
     }
   }
@@ -64,7 +60,6 @@ export function knightMoves(start, end) {
     }
   }
   shortestPath(start,par,dist,end); //get shortest path for each node and save it in par (with cost in dist)
-  console.log(dist)
   let path = [];
   path.push(end);
   let currentNode = end;
