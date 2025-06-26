@@ -26,28 +26,52 @@ function allowedMoves(pos) {
   ];
   const allowedMoves = [];
   for (let i = 0; i < moves.length; i++) {
-    if (moves[i][0] >= 0 && moves[i][1] >= 0) {
+    if (moves[i][0] >= 0 && moves[i][1] >= 0 && moves[i][0] < 8 && moves[i][1] <8) {
       allowedMoves.push(moves[i]);
     }
   }
   return allowedMoves;
 }
 
-export function knightMoves(start, end) {
-  const queue = [start];
-  const dist =Array(64).fill(-1);
-  const path = [];
-  while (queue.length != 0) {
-    console.log(queue)
-    const node = queue.shift();
-    path.push(node);
+function shortestPath(s,par,dist,d){
+  const q=[]
+  q.push(s);
+  dist[s[0]][s[1]]=0;
+
+  while (q.length >0){
+    const node =q.shift();
     const moves = allowedMoves(node);
-    const foundEnd = moves.some(move=> end[0]==move[0] && end[1]==move[1]);
-    if (foundEnd){
-        path.push(end);
-        return path;
+    for (const neighbor of moves){
+      if (dist[neighbor[0]][neighbor[1]] === Infinity){
+        par[neighbor[0]][neighbor[1]] = node;
+        dist[neighbor[0]][neighbor[1]] = dist[node[0]][node[1]] +1;
+        if (d[0] == neighbor[0] && d[1] == neighbor[1]) return;
+        q.push(neighbor);
+      }
     }
-    for (let i =0; i<moves.length; i++)
-        queue.push(moves[i]);
   }
+}
+
+export function knightMoves(start, end) {
+  const dist = [];
+  const par = [];
+  for (let i=0; i<8; i++){ //initialize par, dist with all possible moves
+    dist[i]=[];
+    par[i]=[];
+    for (let j=0; j<8; j++){
+      dist[i][j]=Infinity;
+      par[i][j]=-1;
+    }
+  }
+  shortestPath(start,par,dist,end); //get shortest path for each node and save it in par (with cost in dist)
+  console.log(dist)
+  let path = [];
+  path.push(end);
+  let currentNode = end;
+  while (par[currentNode[0]][currentNode[1]] !=-1){
+    path.push(par[currentNode[0]][currentNode[1]]);
+    currentNode = par[currentNode[0]][currentNode[1]];
+  }
+  path = path.reverse();
+  return path;
 }
